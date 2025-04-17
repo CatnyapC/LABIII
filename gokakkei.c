@@ -1,41 +1,47 @@
+#include <GLUT/glut.h>
 
-#include <GLFW/glfw3.h>
-#include <OpenGL/gl.h>
+void display(void) {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glLoadIdentity();
+	gluLookAt(0, 0, 3, 0, 0, 0, 0, 1, 0);
 
-int main(void)
-{
-	if (!glfwInit())
-		return -1;
+	glColor3f(1.0, 0.0, 0.0);
+	glBegin(GL_POLYGON);
+	glVertex3f(-0.5, -0.5, 0.0);
+	glVertex3f(0.5, -0.5, 0.0);
+	glVertex3f(0.5, 0.5, 0.0);
+	glVertex3f(0.0, 1.0, 0.0);
+	glVertex3f(-0.5, 0.5, 0.0);
+	glEnd();
 
-	GLFWwindow* window = glfwCreateWindow(500, 500, "Gokakkei Polygon", NULL, NULL);
-	if (!window) {
-		glfwTerminate();
-		return -1;
-	}
+	glFlush();
+}
 
-	glfwMakeContextCurrent(window);
+void init(void) {
+	glClearColor(0.9, 0.9, 0.9, 0.0);
+	glEnable(GL_DEPTH_TEST);
 
-	while (!glfwWindowShouldClose(window)) {
-		glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(40, 1.0, 0.1, 1000);
+	glMatrixMode(GL_MODELVIEW);
+}
 
-		glLoadIdentity();
-		gluLookAt(0, 0, 3, 0, 0, 0, 0, 1, 0);
+void key(unsigned char key, int x, int y) {
+	if (key == 'q') exit(0);
+}
 
-		glColor3f(1.0, 0.0, 0.0);
-		glBegin(GL_POLYGON);
-		glVertex3f(-0.5, -0.5, 0.0);
-		glVertex3f(0.5, -0.5, 0.0);
-		glVertex3f(0.5, 0.5, 0.0);
-		glVertex3f(0.0, 1.0, 0.0);
-		glVertex3f(-0.5, 0.5, 0.0);
-		glEnd();
+int main(int argc, char **argv) {
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA | GLUT_DEPTH);
+	glutInitWindowSize(500, 500);
+	glutInitWindowPosition(100, 100);
+	glutCreateWindow("Gokakkei Polygon");
 
-		glfwSwapBuffers(window);
-		glfwPollEvents();
-	}
-
-	glfwDestroyWindow(window);
-	glfwTerminate();
+	init();
+	glutDisplayFunc(display);
+	glutKeyboardFunc(key);
+	glutMainLoop();
 	return 0;
 }
+
